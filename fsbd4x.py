@@ -1,4 +1,4 @@
-from data.dataset import Dataset, TestDataset
+from data.dataset import FSBDDataset4x, TestDataset
 from frcn.faster_rcnn_vgg16 import FasterRCNNVGG16
 from trainer import FasterRCNNTrainer
 from utils.config import conf
@@ -11,6 +11,7 @@ import os
 import cv2
 from tqdm import tqdm
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
@@ -21,34 +22,15 @@ def train(split, cos, load_path, shots, model_name):
 
 
   faster_rcnn = FasterRCNNVGG16(n_fg_class = len(conf.choosen_class), cos = cos)
-  frcnft_trainer = FasterRCNNTrainer(faster_rcnn).to(device)
+  fsbd_trainer = FasterRCNNTrainer(faster_rcnn).to(device)
 
   if load_path != 'none' :
-    pre_faster_rcnn = FasterRCNNVGG16(n_fg_class = len(conf.base3_choosen_class), cos = True)
-    pre_trainer = FasterRCNNTrainer(pre_faster_rcnn).to(device)
-
-    pre_trainer.load(load_path)
-
-    pretrained_dict = pre_trainer.faster_rcnn.state_dict()
-    model_dict = frcnft_trainer.faster_rcnn.state_dict()
-    new_dict = frcnft_trainer.faster_rcnn.state_dict()
-
-    pretrained_dict = {k: v for k, v in pretrained_dict.items() if k not in ['head.cls_loc.weight','head.cls_loc.bias','head.score.weight','head.score.bias']}
-    new_dict.update(pretrained_dict) 
-
-    model_dict = {k: v for k, v in model_dict.items() if k in ['head.cls_loc.weight','head.cls_loc.bias','head.score.weight','head.score.bias']}
-    new_dict.update(pretrained_dict) 
-    
-    frcnft_trainer.faster_rcnn.load_state_dict(new_dict)
-
-    # sd = [k for k,v in trainer.faster_rcnn.state_dict().items()]
-
-    # print(sd)
+    fsbd_trainer.load(load_path = load_path)
 
 
   lr_ = conf.lr
 
-  dataset = Dataset(split=split)
+  dataset = FSBDDataset4x(split=split)
   dataloader = data_.DataLoader(dataset,batch_size=1,shuffle=True,num_workers=conf.num_workers)
 
 
@@ -56,13 +38,18 @@ def train(split, cos, load_path, shots, model_name):
 
     ls = 0.0
     tn = 0
+    flag = 0
 
     for ii, (img, bbox_, label_, scale, fname) in tqdm(enumerate(dataloader)):
 
       scale = at.scalar(scale)
       img, bbox, label = img.to(device).float(), bbox_.to(device), label_.to(device)
 
-      losses = frcnft_trainer.train_step(img, bbox, label, scale)
+      losses = fsbd_trainer.train_step(img, bbox, label, scale)
+
+      if flag == 0 and np.isnan(losses.total_loss.item()) :
+        flag = 1
+        print(img)
 
       ls += losses.total_loss.item()
       tn += 1 
@@ -71,11 +58,12 @@ def train(split, cos, load_path, shots, model_name):
     
 
     if epoch == 9:
-      frcnft_trainer.faster_rcnn.scale_lr(conf.lr_decay)
+      fsbd_trainer.faster_rcnn.scale_lr(conf.lr_decay)
       lr_ = lr_ * conf.lr_decay
 
-  frcnft_trainer.save(save_path=conf.weight_path,fn=model_name+'_'+shots+'.pth')
-  
+    if epoch % 10 == 0 : fsbd_trainer.save(save_path=conf.weight_path,fn=model_name+'_'+shots+'.pth')
+    
+  fsbd_trainer.save(save_path=conf.weight_path,fn=model_name+'_'+shots+'.pth')
 
 
 def test(split, cos, load_path, shots, model_name):
@@ -136,4 +124,4 @@ def test(split, cos, load_path, shots, model_name):
 
 if __name__ == '__main__':
   # train()
-  print('Inside frcnft\'s main')
+  print('Inside FSBD\'s main')

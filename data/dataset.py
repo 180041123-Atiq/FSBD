@@ -157,34 +157,88 @@ class CDDataset:
     return len(self.db)
 
 
-# train_teacher_dataset = CDDataset(transforms = False)
-# train_student_dataset = CDDataset(transforms = True)
+class FSBDDataset2x:
 
-# train_teacher_loader = DataLoader(
-#     train_teacher_dataset,
-#     batch_size = 1,
-#     shuffle = True,
-#     num_workers = conf.num_workers,
-# )
-# train_student_loader = DataLoader(
-#     train_student_dataset,
-#     batch_size = 1,
-#     shuffle = True,
-#     num_workers = conf.num_workers,
-# )
+  def __init__(self, split = 'beta'):
+    self.db = TrBboxDataset( split = split)
+    self.tsf = Transform(conf.min_size, conf.max_size)
+
+  def __getitem__(self, idx):
+    real_idx = idx//2
+    ori_img, bbox, label, fname = self.db.__getitem__(real_idx)
+    
+    img, bbox, label, scale = self.tsf((ori_img, bbox, label))
+
+
+    img = img.transpose((1,2,0))
+    objtotensor = T.ToTensor()
+    objgaus = T.GaussianBlur(kernel_size=(5, 9), sigma=(0.1, 5))
+    objjit = T.ColorJitter(brightness=.5, hue=.3)
+    objco = Cutout(1,8)
+    img = objtotensor(img.copy())
+
+    if idx % 2 != 0 :
+      img = objgaus(img)
+      img = objjit(img)
+      img = objco(img)
+
+    img = img.numpy()
+
+    return img.copy(), bbox.copy(), label.copy(), scale, fname
+
+  def __len__(self):
+    return (len(self.db)*2)
+
+
+class FSBDDataset4x:
+
+  def __init__(self, split = 'beta'):
+    self.db = TrBboxDataset( split = split)
+    self.tsf = Transform(conf.min_size, conf.max_size)
+
+  def __getitem__(self, idx):
+    real_idx = idx//4
+    ori_img, bbox, label, fname = self.db.__getitem__(real_idx)
+    
+    img, bbox, label, scale = self.tsf((ori_img, bbox, label))
+
+
+    img = img.transpose((1,2,0))
+    objtotensor = T.ToTensor()
+    objgaus = T.GaussianBlur(kernel_size=(5, 9), sigma=(0.1, 5))
+    objjit = T.ColorJitter(brightness=.5, hue=.3)
+    objco = Cutout(1,8)
+    img = objtotensor(img.copy())
+
+    if idx % 4 != 0 :
+      img = objgaus(img)
+      img = objjit(img)
+      img = objco(img)
+
+    img = img.numpy()
+
+    return img.copy(), bbox.copy(), label.copy(), scale, fname
+
+
+  def __len__(self):
+    return (len(self.db)*4)
 
 if __name__ == '__main__':
 
   print("Inside dataset")
 
-  db = Dataset()
+  conf.data_dir = conf.ten_shot_tn
+  conf.image_path = conf.ten_shot_image
+  conf.annot_path = conf.ten_shot_annot
+
+  db = FSBDDataset2x(split='beta')
   print(db.__len__())
 
   for ii in range(db.__len__()):
     db.__getitem__(ii)
 
   img,bbox,label,scale,fname = db.__getitem__(0)
-  print(img.shape)
+  print("Displaying img shape : ",img.shape)
 
   img = img.transpose((1,2,0))
 

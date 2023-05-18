@@ -22,15 +22,30 @@ class Config :
   cdfsod_lamda = 2.0
 
 
-  one_shot_tn = '/content/drive/MyDrive/FSBD/datasets/fsbd-1-tn.txt'
-  one_shot_ts = '/content/drive/MyDrive/FSBD/datasets/fsbd-1-ts.txt'
+  one_shot_tn = '/content/drive/MyDrive/FSBD/datasets/Fsbd-1-tn.txt'
+  one_shot_ts = '/content/drive/MyDrive/FSBD/datasets/Fsbd-1-ts.txt'
   one_shot_image = '/content/drive/MyDrive/FSBD/datasets/test'
   one_shot_annot = '/content/drive/MyDrive/FSBD/datasets/labels/test'
 
-  five_shot_tn = '/content/drive/MyDrive/FSBD/datasets/fsbd-5-tn.txt'
-  five_shot_ts = '/content/drive/MyDrive/FSBD/datasets/fsbd-5-ts.txt'
+  two_shot_tn = '/content/drive/MyDrive/FSBD/datasets/Fsbd-2-tn.txt'
+  two_shot_ts = '/content/drive/MyDrive/FSBD/datasets/Fsbd-2-ts.txt'
+  two_shot_image = '/content/drive/MyDrive/FSBD/datasets/test'
+  two_shot_annot = '/content/drive/MyDrive/FSBD/datasets/labels/test'
+
+  five_shot_tn = '/content/drive/MyDrive/FSBD/datasets/Fsbd-5-tn.txt'
+  five_shot_ts = '/content/drive/MyDrive/FSBD/datasets/Fsbd-5-ts.txt'
   five_shot_image = '/content/drive/MyDrive/FSBD/datasets/test'
   five_shot_annot = '/content/drive/MyDrive/FSBD/datasets/labels/test'
+
+  ten_shot_tn = '/content/drive/MyDrive/FSBD/datasets/Fsbd-10-tn.txt'
+  ten_shot_ts = '/content/drive/MyDrive/FSBD/datasets/Fsbd-10-ts.txt'
+  ten_shot_image = '/content/drive/MyDrive/FSBD/datasets/test'
+  ten_shot_annot = '/content/drive/MyDrive/FSBD/datasets/labels/test'
+
+  three_shot_tn = '/content/drive/MyDrive/FSBD/datasets/Fsbd-3-tn.txt'
+  three_shot_ts = '/content/drive/MyDrive/FSBD/datasets/Fsbd-3-ts.txt'
+  three_shot_image = '/content/drive/MyDrive/FSBD/datasets/test'
+  three_shot_annot = '/content/drive/MyDrive/FSBD/datasets/labels/test'
 
   base1 = '/content/drive/MyDrive/FSBD/datasets/GTSDB/strain.txt'
   base1_image = '/content/drive/MyDrive/FSBD/datasets/GTSDB/images'
@@ -81,6 +96,18 @@ class Config :
   cdfsodcos5_path = os.path.join(weight_path,'cdfsodcos_5.pth')
   cdfsodcos10_path = os.path.join(weight_path,'cdfsodcos_10.pth')
 
+  fsbd2x1_path = os.path.join(weight_path,'fsbd2x_1.pth')
+  fsbd2x2_path = os.path.join(weight_path,'fsbd2x_2.pth')
+  fsbd2x3_path = os.path.join(weight_path,'fsbd2x_3.pth')
+  fsbd2x5_path = os.path.join(weight_path,'fsbd2x_5.pth')
+  fsbd2x10_path = os.path.join(weight_path,'fsbd2x_10.pth')
+
+  fsbd4x1_path = os.path.join(weight_path,'fsbd4x_1.pth')
+  fsbd4x2_path = os.path.join(weight_path,'fsbd4x_2.pth')
+  fsbd4x3_path = os.path.join(weight_path,'fsbd4x_3.pth')
+  fsbd4x5_path = os.path.join(weight_path,'fsbd4x_5.pth')
+  fsbd4x10_path = os.path.join(weight_path,'fsbd4x_10.pth')
+
   test_predictions_path = '/content/drive/MyDrive/FSBD/test_predictions'
 
 
@@ -110,7 +137,7 @@ class Config :
   pretrained_model = 'vgg16'
 
   # training
-  epoch = 1
+  epoch = 50
 
 
   use_adam = False # Use Adam optimizer

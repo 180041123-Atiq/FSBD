@@ -253,12 +253,12 @@ def test(split, cos, load_path, shots, model_name):
       # print(box)
       img = cv2.rectangle(img,(int(box[1]),int(box[0])),(int(box[3]),int(box[2])),(0, 0, 255),6)
     
-    my_file = str(ii) + conf.image_extension
-    my_path = os.path.join(conf.test_predictions_path,model_name+'_'+shots)
-    if os.path.exists(my_path) == False :os.makedirs(my_path) 
+    # my_file = str(ii) + conf.image_extension
+    # my_path = os.path.join(conf.test_predictions_path,model_name+'_'+shots)
+    # if os.path.exists(my_path) == False :os.makedirs(my_path) 
 
-    plt.imshow(img)
-    plt.savefig(os.path.join(my_path, my_file))
+    # plt.imshow(img)
+    # plt.savefig(os.path.join(my_path, my_file))
 
     gt_bboxes += list(gt_bboxes_.numpy())
     gt_labels += list(gt_labels_.numpy())

@@ -27,10 +27,10 @@ def generate_txt_file(shots,files):
         cls = line.split(' ')[0]
 
         if cls in ccls :
-          if len(mp[cls]) < shots+15 : mp[cls].append(fls[ii].split('/')[-1])
+          if len(mp[cls]) < shots+15 or True : mp[cls].append(fls[ii].split('/')[-1])
 
 
-  with open(os.path.join(conf.data_gen_files_path,'fsbd-'+str(shots)+'-tn.txt'),'w') as filehandle:
+  with open(os.path.join(conf.data_gen_files_path,'Fsbd-'+str(shots)+'-tn.txt'),'w') as filehandle:
 
     ini = False
     for ic in ccls:
@@ -43,11 +43,11 @@ def generate_txt_file(shots,files):
         filehandle.write('%s' % mp[ic][i])
 
 
-  with open(os.path.join(conf.data_gen_files_path,'fsbd-'+str(shots)+'-ts.txt'),'w') as filehandle:
+  with open(os.path.join(conf.data_gen_files_path,'Fsbd-'+str(shots)+'-ts.txt'),'w') as filehandle:
 
     ini = False
     for ic in ccls:
-      for i in range(shots,shots+15):
+      for i in range(shots,len(mp[ic])):
 
         if ini == False : 
           ini = True
@@ -57,7 +57,7 @@ def generate_txt_file(shots,files):
 
   amp = {icls:0 for icls in ccls}
 
-  with open(os.path.join(conf.data_gen_files_path,'fsbd-'+str(shots)+'-tn.txt'),'r') as files :
+  with open(os.path.join(conf.data_gen_files_path,'Fsbd-'+str(shots)+'-tn.txt'),'r') as files :
     for f in files:
       with open(os.path.join(conf.annot_path,f.split('.')[0]+'.txt'),'r') as lines:
         for line in lines :
@@ -70,7 +70,7 @@ def generate_txt_file(shots,files):
 
   amp = {icls:0 for icls in ccls}
 
-  with open(os.path.join(conf.data_gen_files_path,'fsbd-'+str(shots)+'-ts.txt'),'r') as files :
+  with open(os.path.join(conf.data_gen_files_path,'Fsbd-'+str(shots)+'-ts.txt'),'r') as files :
     for f in files:
       with open(os.path.join(conf.annot_path,f.split('.')[0]+'.txt'),'r') as lines:
         for line in lines :
@@ -78,13 +78,15 @@ def generate_txt_file(shots,files):
           amp[cls] += 1
 
   print()
-  print('-------5 way 15 shots ts--------')
+  print('-------5 way undeterministic shots ts--------')
   print(amp)
 
 
 
 if __name__=="__main__":
-  
+
+  conf.annot_path = "/content/drive/MyDrive/FSBD/datasets/labels/test"
+
   files = glob.glob(os.path.join(conf.annot_path,"*.txt"))
 
   for it in conf.shot_list:
