@@ -30,4 +30,5 @@ The flow of our implementation is quite like the above given repo by Yun Chen. W
 We really tried to keep our codebase easy to understand because all of us faced hard time understanding others. But after implementing and integrating everything we found that keeping your codebase easy to understand, is very hard. But we will urge you to go through all the files and you will definitely understand whatever we were doing there.
 
 ## Result
-At last our result of running FSBD on Bangladeshi traffic Signs with all others is,
+At last our result of running FSBD on Bangladeshi traffic Signs along with all others is,
+![Result](https://github.com/180041123-Atiq/FSBD/blob/main/quantatitive_analysis.png)
